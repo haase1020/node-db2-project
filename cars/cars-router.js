@@ -13,4 +13,20 @@ router.get('/', (req,res)=> {
 });
 
 
+router.post('/', (req,res) => {
+    const carData = req.body;
+    db('cars')
+    .insert(carData, 'id')
+    .then(ids => {
+        db('cars')
+        .where({ id: ids[0] })
+        .then(newCarData => {
+            res.status(201).json(newCarData)
+        });
+    })
+    .catch(err => {
+        res.status(500).json({ errorMessage: 'Failed in posting data' })
+    });
+});
+
 module.exports = router;
